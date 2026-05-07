@@ -69,8 +69,8 @@ p.K_STO = 0.1; %Saturation constant for X_STO (1)
 p.mu_H = 6; %Heterotropic maximum growth rate of X_H (2)
 p.K_NH4 = 0.01; %Satruation constant for Ammonium, S_NH4
 p.K_ALK = 0.1; %Saturation constant for alkalinity for X_H
-p.b_H_O2 = 0.1; %Aerobic Endogenous Respiration Rate of X_H
-p.b_H_NOX = 0.1; %Anoxic Endogenous Respiration rate of X_H 
+p.b_H_O2 = 0.02; %Aerobic Endogenous Respiration Rate of X_H (0.1)
+p.b_H_NOX = 0.01; %Anoxic Endogenous Respiration rate of X_H (0.1)
 p.b_STO_O2 = 0.2; %Aerobic respiration rate for X_STO
 p.b_STO_NOX = 0.1;%Anoxic Respiration rate for X_STO
 
@@ -79,8 +79,8 @@ p.mu_A = 1; %Autotrophic max growth rate of X_A
 p.K_A_NH4 = 1; %Ammonium substrate saturation for X_A
 p.K_A_O2 = 0.5; %Oxygen saturation for nitrifiers
 p.K_A_ALK = 0.5; %bicarbonate saturation for nitrifiers
-p.b_A_O2 = 0.15; %Aerobic endogenous respiration rate of X_A
-p.b_A_NOX = 0.05; %Anoxic endogenous respiration rate of X_A
+p.b_A_O2 = 0.015; %Aerobic endogenous respiration rate of X_A (0.15)
+p.b_A_NOX = 0.005; %Anoxic endogenous respiration rate of X_A (0.05)
 p.K_A_NOX = 0.2;  %Nitrate saturation for nitrifiers endogenous respiration (Please check) 
 
 
@@ -96,7 +96,7 @@ p.Q = 100;     % m3/day
 p.V = 700;      % m3
 p.D = p.Q / p.V;   % dilution rate (day^-1)
 
-p.SRT = 10;   % days
+p.SRT = 40;   % days
 
 
 %run StoichCompParameters.m
@@ -111,7 +111,7 @@ i_N_S_I = 0.01; %N content of S_I
 i_N_S_S = 0.03; %N content of S_S
 i_N_X_I = 0.02; %N content of X_I
 i_N_X_S = 0.04; %N content of X_S
-i_N_BM = 0.07; %N content of Biomass , X_H, X_A
+i_N_BM = 0.03; %N content of Biomass , X_H, X_A (0.07)
 i_SS_X_I = 0.75; %SS to COD ratio of X_I
 i_SS_X_S = 0.75; %SS to COD ratio of X_S
 i_SS_BM = 0.90; %SS to COD ratio of X_H, X_A
@@ -339,7 +339,7 @@ X_SS;
 ];
 %X = X0;
 
-tspan = linspace(0, 50, 10000);% choose time (e.g., days)
+tspan = linspace(0, 500, 10000);% choose time (e.g., days)
 
 [t, X] = ode15s(@(t,X) asm_model(t, X, S, p,X_in), tspan, X0);
 
@@ -348,8 +348,6 @@ totalCOD = X(:,3) + X(:,9) + X(:,10) + X(:,11) + X(:,8);
 plot(t, totalCOD)
 xlabel('Time')
 ylabel('Total COD')
-
-hold on
 
 totalN = X(:,4) + X(:,6) + X(:,5) + i_N_S_I*X(:,2) + i_N_S_S*X(:,3) + i_N_X_I*X(:,8) + i_N_X_S*X(:,9) + i_N_BM*X(:,10) + i_N_BM*X(:,12);
 plot(t, totalN)
